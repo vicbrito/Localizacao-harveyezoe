@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Informações do Animal</title>
+</head>
+<body>
+    <h1>Informações do Animal</h1>
+    <p>Aqui estarão as informações sobre o animal.</p>
+    <script>
+        function enviarLocalizacao(posicao) {
+            var latitude = posicao.coords.latitude;
+            var longitude = posicao.coords.longitude;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://<seu-projeto>.cloudfunctions.net/salvarLocalizacao", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify({
+                latitude: latitude,
+                longitude: longitude
+            }));
+        }
+
+        function erroAoObterLocalizacao(error) {
+            console.warn(`ERRO(${error.code}): ${error.message}`);
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(enviarLocalizacao, erroAoObterLocalizacao);
+        } else {
+            console.log("Geolocalização não é suportada pelo seu navegador.");
+        }
+    </script>
+</body>
+</html>
